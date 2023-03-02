@@ -5,10 +5,10 @@
 - [x] Configurar conexión MySQL en application.properties
 
 - [x] Entidad Flight
-- [ ] Repositorio FlightRepository
-- [ ] Interfaz servicio FlightService: crud y lógica de negocio
-- [ ] Implementación servicio FlightServiceImpl
-- [ ] Controlador FlightController
+- [x] Repositorio FlightRepository
+- [x] Interfaz servicio FlightService: crud y lógica de negocio
+- [x] Implementación servicio FlightServiceImpl
+- [x] Controlador FlightController
 	- [ ] findAll
 	- [ ] findById
 	- [ ] showCreateForm

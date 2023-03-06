@@ -1,15 +1,18 @@
 package com.example.controllers;
 
 import com.example.entities.Flight;
+import com.example.entities.Passenger;
 import com.example.entities.Ticket;
+import com.example.services.FileStorageService;
+import com.example.services.FlightService;
 import com.example.services.TicketService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -18,12 +21,22 @@ import java.util.Optional;
 public class TicketController {
     
     private final TicketService ticketService;
+    private final FlightService flightService;
+    private final FileStorageService fileStorageService;
 
-
+    // recupera los tickets sin filtrar
     @GetMapping("tickets") 
     public String findAll(Model model) {
         model.addAttribute("tickets", ticketService.findAll());
         return "ticket/ticket-list"; 
+    }
+
+    // recupera los tickets del usuario con la sesión iniciada
+    @GetMapping("user-tickets")
+    public String findAllByCurrentUser(Model model) {
+        Passenger currentUser = (Passenger) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("tickets", ticketService.findAllByPassengerId(currentUser.getId()));
+        return "ticket/ticket-list";
     }
 
     @GetMapping("tickets/{id}")
@@ -37,6 +50,19 @@ public class TicketController {
         return "ticket/ticket-detail"; // vista
     }
 
+    @GetMapping("tickets/{id}/buy")
+    public String buyTicketForCurrentUser(Model model, @PathVariable Long id) {
+        try {
+            ticketService.buyTicketForCurrentUser(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "No se ha podido completar la compra");
+            model.addAttribute("tickets", ticketService.findAll());
+            return "ticket/ticket-list";
+        }
+        return "redirect:/user-tickets";
+    }
+
     @GetMapping("tickets/create")
     public String showCreateForm(Model model) {
         model.addAttribute("ticket", new Ticket());
@@ -45,19 +71,35 @@ public class TicketController {
 
     // Guardar formulario para crear/editar un vuelo
     @PostMapping("tickets")
-    public String saveForm(@ModelAttribute Ticket ticket) {
-        ticketService.save(ticket);
-        return "redirect:/tickets"; // redirección a controlador findAll
+    public String saveForm(Model model, @ModelAttribute Ticket ticket, @RequestParam("file") MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            ticketService.save(ticket);
+            return "redirect:/tickets";
+        }
+
+        try {
+            String fileName = fileStorageService.storeInFileSystem(file);
+            ticket.setImageUrl(fileName); // string
+            ticketService.save(ticket);
+            return "redirect:/tickets"; // redirección a controlador findAll
+        } catch (Exception e) {
+            model.addAttribute("error", "No se ha podido guardar la imagen");
+            model.addAttribute("tickets", ticketService.findAll());
+            return "ticket/ticket-list";
+        }
+
     }
 
     // Mostrar formulario para editar
     @GetMapping("tickets/{id}/edit")
     public String showEditForm(Model model, @PathVariable Long id) {
         Optional<Ticket> ticketOptional = ticketService.findById(id);
-        if (ticketOptional.isPresent())
-            model.addAttribute("flight", ticketOptional.get());
-        else
+        if (ticketOptional.isPresent()) {
+            model.addAttribute("ticket", ticketOptional.get());
+            model.addAttribute("flights", flightService.findAll());
+        } else {
             model.addAttribute("error", "Not Found");
+        }
 
         return "ticket/ticket-form"; // vista
     }

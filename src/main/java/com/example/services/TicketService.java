@@ -12,4 +12,7 @@ public interface TicketService {
     List<Ticket> findAllByPriceLessThanEqual(double price);
     Ticket save(Ticket ticket);
     void deleteById(Long id);
+    List<Ticket> findAllByPassengerId(Long id);
+    void buyTicketForCurrentUser(Long ticketId);
+
 }

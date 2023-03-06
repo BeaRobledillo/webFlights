@@ -22,10 +22,15 @@ public class Ticket {
     private String seat;
     private Double price;
     private Boolean food;
+    private String imageUrl;
 
     @ManyToOne
     @ToString.Exclude
     private Flight flight;
+
+    @ManyToOne
+    @ToString.Exclude
+    private Passenger passenger;
 
     @Override
     public boolean equals(Object o) {

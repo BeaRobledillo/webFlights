@@ -78,4 +78,14 @@ public class TicketServiceImpl implements TicketService {
         passenger.setBalance(balanceAfterBuy);
         passengerService.save(passenger);
     }
+
+    @Override
+    public List<Ticket> findAllByFlightId(Long id) {
+        return ticketRepo.findAllByFlightId(id);
+    }
+
+    @Override
+    public List<Ticket> saveAll(List<Ticket> tickets) {
+        return ticketRepo.saveAll(tickets);
+    }
 }

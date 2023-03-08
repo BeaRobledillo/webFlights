@@ -4,13 +4,12 @@ package com.example.controllers;
 import com.example.entities.Flight;
 import com.example.services.FlightService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -21,10 +20,28 @@ public class FlightController {
 
     // Listado de vuelos
     @GetMapping("flights") // URL
-    public String findAll(Model model) {
-        model.addAttribute("mensaje1", "Hola mundo");
-        model.addAttribute("mensaje2", "Hola mundo");
-        model.addAttribute("flights", flightService.findAll()); // HTML
+    public String findAll(Model model,
+                          @RequestParam(defaultValue = "") String airportFrom,
+                          @RequestParam(defaultValue = "") String airportTo) {
+
+//        List<Flight> flights;
+//        if (airportFrom.length() > 0 && airportTo.length() > 0)
+//            flights = flightService.findAllByAirportFromAndAirportTo(airportFrom, airportTo);
+//
+//        else if (airportFrom.length() > 0)
+//            flights = flightService.findAllByAirportFrom(airportFrom);
+//
+//        else if (airportTo.length() > 0)
+//            flights = flightService.findAllByAirportTo(airportTo);
+//
+//        else
+//            flights = flightService.findAll();
+//
+//        model.addAttribute("flights", flights);
+
+        Example<Flight> filter = Example.of(new Flight(airportFrom, airportTo));
+        model.addAttribute("flights", flightService.findAll(filter));
+
         return "flight/flight-list"; // vista
     }
 

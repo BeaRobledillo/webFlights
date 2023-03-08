@@ -14,5 +14,6 @@ public interface TicketService {
     void deleteById(Long id);
     List<Ticket> findAllByPassengerId(Long id);
     void buyTicketForCurrentUser(Long ticketId);
-
+    List<Ticket> findAllByFlightId(Long id);
+    List<Ticket> saveAll(List<Ticket> tickets);
 }

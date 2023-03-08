@@ -23,7 +23,7 @@
             </div>
 
             <div class="card" th:if="${error} == null">
-                <img th:src="${#strings.isEmpty(ticket.imageUrl)} ? 'https://dummyimage.com/300' : |/img/${ticket.imageUrl}|" class="card-img-top" alt="Food Image">
+                <img th:src="${#strings.isEmpty(ticket.imageUrl)} ? 'https://dummyimage.com/300' : |/files/${ticket.imageUrl}|" class="card-img-top" alt="Food Image">
                 <div class="card-body">
                     <h5 class="card-title" th:text="|Ticket ${ticket.id}|"></h5>
                     <p class="card-text" th:text="| Seat: ${ticket.seat}|"></p>

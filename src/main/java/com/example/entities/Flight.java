@@ -3,6 +3,7 @@ package com.example.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -35,4 +36,12 @@ public class Flight {
     @ToString.Exclude
     Set<Ticket> tickets = new HashSet<>();
 
+    public Flight(Long id) {
+        this.id = id;
+    }
+
+    public Flight(String airportFrom, String airportTo) {
+        this.airportFrom = StringUtils.hasLength(airportFrom) ? airportFrom : null;
+        this.airportTo = StringUtils.hasLength(airportTo) ? airportTo : null;
+    }
 }

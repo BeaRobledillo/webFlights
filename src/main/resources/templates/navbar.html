@@ -37,9 +37,9 @@
                     <strong>User: </strong> <span sec:authentication="principal.username"></span>
                 </div>
 
-                <div class="d-flex" sec:authorize="isAuthenticated()">
-                    <strong>Balance: </strong><span sec:authentication="principal.balance"></span> €
-                </div>
+<!--                <div class="d-flex" sec:authorize="isAuthenticated()">-->
+<!--                    <strong>Balance: </strong><span th:if="${principal.username}" sec:authentication="principal.balance"></span> €-->
+<!--                </div>-->
 
                 <div class="d-flex" sec:authorize="isAuthenticated()">
                     <a class="btn btn-link" th:href="@{/logout}">Cerrar sesión</a>

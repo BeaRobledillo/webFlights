@@ -11,4 +11,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findAllByPriceBetween(double min, double max);
     List<Ticket> findAllByPriceLessThanEqual(double price);
     List<Ticket> findAllByPassengerId(Long id);
+    List<Ticket> findAllByFlightId(Long id);
 }

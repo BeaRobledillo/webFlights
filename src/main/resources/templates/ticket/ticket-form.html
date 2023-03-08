@@ -52,6 +52,8 @@
                     </select>
                 </div>
 
+                <input type="hidden" class="form-control" id="passenger" th:field="*{passenger}">
+
                 <img th:if="${ticket.imageUrl}" th:src="|/img/${ticket.imageUrl}|" class="card-img-top" alt="Food Image">
                 <div class="mb-3" th:if="${ticket.imageUrl}">
                     <label for="imageUrl" class="form-label">Imagen Url</label>

@@ -1,13 +1,11 @@
 package com.example.controllers;
 
-import com.example.entities.Flight;
 import com.example.entities.Passenger;
 import com.example.entities.Ticket;
-import com.example.services.FileStorageService;
+import com.example.services.FileService;
 import com.example.services.FlightService;
 import com.example.services.TicketService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +20,7 @@ public class TicketController {
     
     private final TicketService ticketService;
     private final FlightService flightService;
-    private final FileStorageService fileStorageService;
+    private final FileService fileService;
 
     // recupera los tickets sin filtrar
     @GetMapping("tickets") 
@@ -66,19 +64,22 @@ public class TicketController {
     @GetMapping("tickets/create")
     public String showCreateForm(Model model) {
         model.addAttribute("ticket", new Ticket());
+        model.addAttribute("flights", flightService.findAll()); // filtrar y ordenar por fecha
         return "ticket/ticket-form";
     }
 
     // Guardar formulario para crear/editar un vuelo
     @PostMapping("tickets")
-    public String saveForm(Model model, @ModelAttribute Ticket ticket, @RequestParam("file") MultipartFile file) {
+    public String saveForm(Model model,
+                           @ModelAttribute Ticket ticket,
+                           @RequestParam("file") MultipartFile file) {
         if (file == null || file.isEmpty()) {
             ticketService.save(ticket);
             return "redirect:/tickets";
         }
 
         try {
-            String fileName = fileStorageService.storeInFileSystem(file);
+            String fileName = fileService.storeInFileSystem(file);
             ticket.setImageUrl(fileName); // string
             ticketService.save(ticket);
             return "redirect:/tickets"; // redirección a controlador findAll

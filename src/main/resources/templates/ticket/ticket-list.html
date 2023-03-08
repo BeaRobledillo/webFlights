@@ -30,6 +30,7 @@
                 <thead>
                 <tr>
                     <th scope="col">Id</th>
+                    <th scope="col">Image</th>
                     <th scope="col">Seat</th>
                     <th scope="col">Price</th>
                     <th scope="col">Food</th>
@@ -40,6 +41,9 @@
                 <tbody>
                 <tr th:each="ticket : ${tickets}">
                     <td th:text="${ticket.id}"></td>
+                    <td>
+                        <img th:src="${#strings.isEmpty(ticket.imageUrl)} ? 'https://dummyimage.com/50' : |/files/${ticket.imageUrl}|" style="max-width: 130px;" alt="Image">
+                    </td>
                     <td th:text="${ticket.seat}"></td>
                     <td th:text="|${#numbers.formatDecimal(ticket.price,2,2)} &euro;|"></td>
                     <td th:text="${ticket.food}"></td>

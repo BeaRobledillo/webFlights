@@ -28,7 +28,7 @@ public class Ticket {
     @ToString.Exclude
     private Flight flight;
 
-    @ManyToOne
+    @ManyToOne // EAGER
     @ToString.Exclude
     private Passenger passenger;
 
